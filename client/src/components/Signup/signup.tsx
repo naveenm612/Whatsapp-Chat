@@ -15,7 +15,6 @@ import {
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-// import emailIcon from "../../assets/email.svg";
 import EmailIcon from '@mui/icons-material/Email';
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import PersonIcon from "@mui/icons-material/Person";
@@ -65,6 +64,11 @@ const SignUpForm: React.FC = () => {
 
       const result = await response.json();
       if (response.ok) {
+        // Store user data in localStorage if the server returns it
+        if (result.user) {
+          localStorage.setItem("user", JSON.stringify(result.user));
+        }
+        
         setSnackbar({ open: true, message: "User signed up successfully!", severity: "success" });
         setTimeout(() => navigate("/chats"), 2000); // Delay navigation for user feedback
       } else {
@@ -176,7 +180,7 @@ const SignUpForm: React.FC = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-               <EmailIcon />
+                  <EmailIcon />
                 </InputAdornment>
               ),
             }}
