@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import emailIcon from "../../assets/email.svg";
+import EmailIcon from "@mui/icons-material/Email";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
 
 const LoginForm: React.FC = () => {
@@ -46,13 +46,15 @@ const LoginForm: React.FC = () => {
 
       const result = await response.json();
       if (response.ok) {
+        // Store user data in localStorage
+        localStorage.setItem("user", JSON.stringify(result.user));
+        
         setSnackbarMessage("Login successful!");
         setSnackbarSeverity("success");
         setSnackbarOpen(true);
         setTimeout(() => {
           navigate("/chats");
-      }, 1000);
-        // navigate("/chats");
+        }, 1000);
       } else {
         setSnackbarMessage(result.message || "Login failed. Please try again.");
         setSnackbarSeverity("error");
@@ -125,77 +127,55 @@ const LoginForm: React.FC = () => {
           gutterBottom
           sx={{ color: "white" }}
         >
-          Log In
+          Log In to ChatFlow
         </Typography>
         <Box component="form" noValidate onSubmit={handleLogin} sx={{ mt: 2 }}>
-          <div style={{ marginBottom: "10px" }}>
-            <div style={{ marginTop: "25px" }}>
-              <div
-                style={{
-                  display: "flex",
-                  position: "relative",
-                  top: "2px",
-                  color: "#ffffff",
-                }}
-              >
-                <img
-                  src={emailIcon}
-                  alt="email"
-                  style={{ width: 24, height: 24, marginRight: "8px" }}
-                />
-                Email
-              </div>
-            </div>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              placeholder="example@gmail.com"
-              name="email"
-              autoComplete="email"
-              sx={{ bgcolor: "white", borderRadius: 2 }}
-            />
-          </div>
-          <div style={{ marginBottom: "10px" }}>
-            <div style={{ marginTop: "10px" }}>
-              <div
-                style={{
-                  display: "flex",
-                  position: "relative",
-                  top: "2px",
-                  color: "#ffffff",
-                }}
-              >
-                <VpnKeyIcon style={{ marginRight: "8px" }} />
-                Password
-              </div>
-            </div>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              placeholder="********"
-              type={showPassword ? "text" : "password"}
-              id="password"
-              autoComplete="current-password"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowPassword((prev) => !prev)}
-                      edge="end"
-                      aria-label="toggle password visibility"
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-              sx={{ bgcolor: "white", borderRadius: 2 }}
-            />
-          </div>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            placeholder="example@gmail.com"
+            name="email"
+            autoComplete="email"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <EmailIcon />
+                </InputAdornment>
+              ),
+            }}
+            sx={{ bgcolor: "white", borderRadius: 2 }}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            placeholder="Password"
+            type={showPassword ? "text" : "password"}
+            id="password"
+            autoComplete="current-password"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <VpnKeyIcon />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    edge="end"
+                    aria-label="toggle password visibility"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+            sx={{ bgcolor: "white", borderRadius: 2 }}
+          />
           <Button
             type="submit"
             fullWidth
@@ -209,7 +189,7 @@ const LoginForm: React.FC = () => {
           Or
         </Typography>
         <Typography variant="body2" align="center" color="white">
-          Don’t have an account?{" "}
+          Don't have an account?{" "}
           <Link
             component="button"
             onClick={() => navigate("/signup")}

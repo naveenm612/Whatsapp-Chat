@@ -4,9 +4,6 @@ import User from "../models/User";
 
 const router = express.Router();
 
-/**
- * Utility function for error handling
- */
 const handleAsyncError = (res: Response, statusCode: number, message: string, error?: unknown): Response => {
   console.error(message, error); // Log error for debugging
   return res.status(statusCode).json({ message, error: error instanceof Error ? error.message : undefined });
@@ -35,9 +32,19 @@ router.post("/signup", async (req: Request, res: Response): Promise<void> => {
     });
 
     // Save the user in the database
-    await newUser.save();
+    const savedUser = await newUser.save();
 
-    res.status(201).json({ message: "User created successfully" });
+    // Create a user object for sending back (without password)
+    const userForResponse = {
+      _id: savedUser._id,
+      name: savedUser.name,
+      email: savedUser.email,
+    };
+
+    res.status(201).json({ 
+      message: "User created successfully",
+      user: userForResponse
+    });
   } catch (error) {
     handleAsyncError(res, 500, "Error creating user", error);
   }
@@ -62,9 +69,29 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    res.status(200).json({ message: "Login successful" });
+    // Create a user object for sending back (without password)
+    const userForResponse = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+    };
+
+    res.status(200).json({ 
+      message: "Login successful",
+      user: userForResponse
+    });
   } catch (error) {
     handleAsyncError(res, 500, "Error during login", error);
+  }
+});
+
+// Get all users
+router.get("/users", async (req: Request, res: Response): Promise<void> => {
+  try {
+    const users = await User.find({}, { password: 0 }); // Exclude password field
+    res.status(200).json(users);
+  } catch (error) {
+    handleAsyncError(res, 500, "Error fetching users", error);
   }
 });
 
