@@ -9,16 +9,12 @@ import {
   TextField,
   IconButton,
   Tooltip,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  Button,
-  DialogActions,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import LogoutIcon from "@mui/icons-material/Logout";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import "./Style.css";
+import DialogBox from "../dialogBox";
 
 interface User {
   _id: string;
@@ -41,6 +37,7 @@ const Chats: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [showSidebar, setShowSidebar] = useState(window.innerWidth > 768);
   const chatWindowRef = useRef<HTMLDivElement | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -73,7 +70,9 @@ const Chats: React.FC = () => {
       }
     };
 
-    fetchUsers();
+    if (currentUser) {
+      fetchUsers();
+    }
   }, [currentUser]);
 
   useEffect(() => {
@@ -93,6 +92,20 @@ const Chats: React.FC = () => {
       chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
     }
   }, [messages]);
+
+  useEffect(() => {
+    // Handle window resize to toggle sidebar on large/small screens
+    const handleResize = () => {
+      if (window.innerWidth > 768) {
+        setShowSidebar(true);
+      } else if (!selectedUser) {
+        setShowSidebar(true); // If no chat selected, show sidebar on small screen
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [selectedUser]);
 
   const fetchChatHistory = async (userId: string, recipientId: string) => {
     try {
@@ -133,16 +146,20 @@ const Chats: React.FC = () => {
   const selectUser = (user: User) => {
     setSelectedUser(user);
     fetchChatHistory(currentUser!._id, user._id);
+    if (window.innerWidth <= 768) {
+      setShowSidebar(false);
+    }
   };
 
-   const handleOpenDialog = () => {
+  const handleOpenDialog = () => {
     setOpenDialog(true);
   };
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
-   const handleLogout = () => {
+
+  const handleLogout = () => {
     if (socket) {
       socket.disconnect();
     }
@@ -150,58 +167,34 @@ const Chats: React.FC = () => {
     navigate("/");
   };
 
-   return (
+  return (
     <Box className="chat-app-container">
-      {/* Sidebar with user list */}
-      <Box className="sidebar">
+      <Box className={`sidebar ${showSidebar ? "show" : ""}`}>
         <Box className="sidebar-header">
           <Box display="flex" alignItems="center">
-            <Avatar sx={{ bgcolor: "#4f46e5", mr: 1 }}>
+            <Avatar sx={{ bgcolor: "#1976d2", mr: 1 }}>
               {currentUser?.name.charAt(0).toUpperCase()}
             </Avatar>
             <Typography variant="h6">{currentUser?.name}</Typography>
           </Box>
-           <Tooltip title="Sign Out">
-        <IconButton onClick={handleOpenDialog} color="error">
-          <LogoutIcon />
-        </IconButton>
-      </Tooltip>
-
-      <Dialog
-        open={openDialog}
-        onClose={handleCloseDialog}
-        aria-labelledby="logout-dialog-title"
-        aria-describedby="logout-dialog-description"
-      >
-        <DialogTitle id="logout-dialog-title">Sign Out</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="logout-dialog-description">
-            Are you sure you want to sign out?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary">
-            No
-          </Button>
-          <Button
-            onClick={() => {
+          <Tooltip title="Sign Out">
+            <IconButton onClick={handleOpenDialog} color="error">
+              <LogoutIcon />
+            </IconButton>
+          </Tooltip>
+          <DialogBox
+            open={openDialog}
+            onClose={handleCloseDialog}
+            onConfirm={() => {
               handleLogout();
               handleCloseDialog();
             }}
-            color="error"
-            autoFocus
-          >
-            Yes
-          </Button>
-        </DialogActions>
-      </Dialog>
-
+          />
         </Box>
-        
-        <Typography variant="subtitle2" sx={{ p: 2, color: "#6b7280" }}>
+        <Typography variant="subtitle2" sx={{ p: 2, color: "#ffffff" }}>
           Active Users
         </Typography>
-        
+
         <Box className="user-list">
           {users.length > 0 ? (
             users.map((user) => (
@@ -210,7 +203,7 @@ const Chats: React.FC = () => {
                 className={`user-item ${selectedUser?._id === user._id ? "selected" : ""}`}
                 onClick={() => selectUser(user)}
               >
-                <Avatar sx={{ bgcolor: "#4f46e5", mr: 2 }}>
+                <Avatar sx={{ bgcolor: "#1976d2", mr: 2 }}>
                   {user.name.charAt(0).toUpperCase()}
                 </Avatar>
                 <Typography>{user.name}</Typography>
@@ -224,70 +217,65 @@ const Chats: React.FC = () => {
         </Box>
       </Box>
 
-      {/* Main chat area */}
-      <Box className="chat-area">
-        {selectedUser ? (
-          <>
-            <Box className="chat-header">
-              <Avatar sx={{ bgcolor: "#4f46e5", mr: 1 }}>
-                {selectedUser.name.charAt(0).toUpperCase()}
-              </Avatar>
-              <Typography variant="h6">{selectedUser.name}</Typography>
-            </Box>
+      <Box className={`chat-area ${showSidebar ? "hide" : ""}`}>
+        <Box className="chat-header">
+          <IconButton onClick={() => setShowSidebar(true)} sx={{ display: { xs: "inline-flex", md: "none" } }}>
+            <ArrowBackIcon />
+          </IconButton>
+          <Avatar sx={{ bgcolor: "#1976d2", mr: 1 }}>
+            {selectedUser?.name.charAt(0).toUpperCase()}
+          </Avatar>
+          <Typography variant="h6">{selectedUser?.name}</Typography>
+        </Box>
 
-            <Box className="chat-messages" ref={chatWindowRef}>
-              {messages.length > 0 ? (
-                messages.map((msg, index) => (
-                  <Box
-                    key={index}
-                    className={`message ${msg.senderId === currentUser?._id ? "sent" : "received"}`}
+        <Box className="chat-messages" ref={chatWindowRef}>
+          {messages.length > 0 ? (
+            messages.map((msg, index) => (
+              <Box
+                key={index}
+                className={`message ${msg.senderId === currentUser?._id ? "sent" : "received"}`}
+              >
+                <Box className="message-content">
+                  <Typography variant="body1">{msg.content}</Typography>
+                  <Typography variant="caption" 
+                  // className="timestamp"
+                   className={`timestamp ${msg.senderId === currentUser?._id ? "sent-time" : "received-time"}`}
                   >
-                    <Box className="message-content">
-                      <Typography variant="body1">{msg.content}</Typography>
-                      <Typography variant="caption" className="timestamp">
-                        {new Date(msg.timestamp).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </Typography>
-                    </Box>
-                  </Box>
-                ))
-              ) : (
-                <Box className="empty-chat">
-                  <Typography variant="body2" color="textSecondary">
-                    No messages yet. Start the conversation!
+                    {new Date(msg.timestamp).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
                   </Typography>
                 </Box>
-              )}
+              </Box>
+            ))
+          ) : (
+            <Box className="empty-chat">
+              <Typography variant="body2" color="textSecondary">
+                No messages yet. Start the conversation!
+              </Typography>
             </Box>
+          )}
+        </Box>
 
-            <Box className="chat-input">
-              <TextField
-                fullWidth
-                placeholder="Type your message..."
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onKeyPress={handleKeyPress}
-                variant="outlined"
-                size="small"
-              />
-              <IconButton
-                color="primary"
-                onClick={sendMessage}
-                disabled={!message.trim()}
-              >
-                <SendIcon />
-              </IconButton>
-            </Box>
-          </>
-        ) : (
-          <Box className="no-chat-selected">
-            <Typography variant="h6" color="textSecondary">
-              Select a user to start chatting
-            </Typography>
-          </Box>
-        )}
+        <Box className="chat-input">
+          <TextField
+            fullWidth
+            placeholder="Type your message..."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyPress={handleKeyPress}
+            variant="outlined"
+            size="small"
+          />
+          <IconButton
+            color="primary"
+            onClick={sendMessage}
+            disabled={!message.trim()}
+          >
+            <SendIcon sx={{ color: "#1976d2" }} />
+          </IconButton>
+        </Box>
       </Box>
     </Box>
   );
