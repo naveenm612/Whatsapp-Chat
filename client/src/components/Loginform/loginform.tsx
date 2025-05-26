@@ -73,148 +73,158 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: "100vh",
-        bgcolor: "white",
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
-      {/* Background Shapes */}
-      <Box
-        sx={{
-          position: "absolute",
-          top: "10%",
-          left: "5%",
-          width: "100px",
-          height: "100px",
-          bgcolor: "#4f46e5",
-          zIndex: 0,
-        }}
-      />
-      <Box
-        sx={{
-          position: "absolute",
-          bottom: "10%",
-          right: "5%",
-          width: "150px",
-          height: "150px",
-          bgcolor: "#4f46e5",
-          borderRadius: "50%",
-          zIndex: 0,
-        }}
-      />
+ <Box
+  sx={{
+    display: "flex",
+    flexDirection: { xs: "column", md: "row" },
+    alignItems: "center",
+    justifyContent: "space-between",
+    minHeight: "91.3vh",
+    bgcolor: "#1976d2",
+    position: "relative",
+    overflow: "hidden",
+    padding: 4,
+    margin: "-8px",
+  }}
+>
+  {/* Left Content */}
+  <Box
+    sx={{
+      pl: { xs: 0, md: 4 },
+      zIndex: 1,
+      color: "white",
+      textAlign: { xs: "center", md: "left" },
+    }}
+  >
+    <Typography component="h2" variant="h4" gutterBottom sx={{ fontWeight: "bold" }}>
+      Welcome To ChatFlow
+    </Typography>
+    <Typography variant="h6" sx={{mb:5}}>Log in to continue your journey.</Typography>
+  </Box>
 
-      <Container
-        component="main"
-        maxWidth="xs"
+  {/* Form Container */}
+  <Container
+    component="main"
+    maxWidth="xs"
+    sx={{
+      transform: { xs: "none", md: "rotate(-10deg)" },
+      right: { xs: "auto", md: "-50px" },
+      bgcolor: "white",
+      borderRadius: 4,
+      p: 4,
+      boxShadow: 4,
+      zIndex: 1,
+      textAlign: "center",
+    }}
+  >
+    {/* <Typography component="h1" variant="h5" align="center" gutterBottom sx={{ color: "#1976d2" }}>
+      Log In to ChatFlow
+    </Typography> */}
+    <Box component="form" noValidate onSubmit={handleLogin} sx={{ mt: 2 }}>
+      <div style={{ marginBottom: "20px" }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                mb: 1,
+                color: "#1976d2",
+              }}
+            >
+              <EmailIcon style={{ marginRight: "8px" }} />
+              Email
+            </Box>
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        id="email"
+        placeholder="example@gmail.com"
+        name="email"
+        autoComplete="email"
+        sx={{ bgcolor: "white", borderRadius: 2 }}
+      />
+      </div>
+       <div style={{ marginBottom: "20px" }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                mb: 1,
+                color: "#1976d2",
+              }}
+            >
+              <VpnKeyIcon style={{ marginRight: "8px" }} />
+              Password
+            </Box>
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        name="password"
+        placeholder="Password"
+        type={showPassword ? "text" : "password"}
+        id="password"
+        autoComplete="current-password"
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                onClick={() => setShowPassword((prev) => !prev)}
+                edge="end"
+                aria-label="toggle password visibility"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+        sx={{ bgcolor: "white", borderRadius: 2 }}
+      />
+      </div>
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
         sx={{
-          zIndex: 1,
-          bgcolor: "#1c1c1c",
-          borderRadius: 4,
-          p: 4,
-          boxShadow: 4,
+          mt: 3,
+          mb: 2,
+          bgcolor: "red",
+          color: "white",
+          borderRadius: 2,
+          textTransform: "capitalize",
         }}
       >
-        <Typography
-          component="h1"
-          variant="h5"
-          align="center"
-          gutterBottom
-          sx={{ color: "white" }}
-        >
-          Log In to ChatFlow
-        </Typography>
-        <Box component="form" noValidate onSubmit={handleLogin} sx={{ mt: 2 }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            placeholder="example@gmail.com"
-            name="email"
-            autoComplete="email"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <EmailIcon />
-                </InputAdornment>
-              ),
-            }}
-            sx={{ bgcolor: "white", borderRadius: 2 }}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            placeholder="Password"
-            type={showPassword ? "text" : "password"}
-            id="password"
-            autoComplete="current-password"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <VpnKeyIcon />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={() => setShowPassword((prev) => !prev)}
-                    edge="end"
-                    aria-label="toggle password visibility"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            sx={{ bgcolor: "white", borderRadius: 2 }}
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2, bgcolor: "#4f46e5", color: "white", borderRadius: 2 }}
-          >
-            Log In
-          </Button>
-        </Box>
-        <Typography variant="body2" align="center" color="white" gutterBottom>
-          Or
-        </Typography>
-        <Typography variant="body2" align="center" color="white">
-          Don't have an account?{" "}
-          <Link
-            component="button"
-            onClick={() => navigate("/signup")}
-            sx={{ color: "#4f46e5" }}
-          >
-            Sign Up
-          </Link>
-        </Typography>
-      </Container>
-
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        Log In
+      </Button>
+       <Typography variant="body2" align="center" color="black" gutterBottom>
+              Or
+            </Typography>
+            <Typography variant="body2" align="center" color="black">
+              Don’t have an account?{" "}
+      <Link
+        component="button"
+        onClick={() => navigate("/signup")}
+        sx={{ marginTop:"-5px", fontSize:"15px"}}
       >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity={snackbarSeverity}
-          sx={{ width: "100%" }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+        Sign Up
+      </Link>
+    </Typography>
     </Box>
+  </Container>
+
+  {/* Snackbar */}
+  <Snackbar
+    open={snackbarOpen}
+    autoHideDuration={6000}
+    onClose={handleCloseSnackbar}
+    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+  >
+    <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: "100%" }}>
+      {snackbarMessage}
+    </Alert>
+  </Snackbar>
+</Box>
+
   );
 };
 

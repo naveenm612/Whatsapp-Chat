@@ -85,167 +85,211 @@ const SignUpForm: React.FC = () => {
   };
 
   return (
-    <Box
+        <Box
       sx={{
         display: "flex",
+        flexDirection: { xs: "column", md: "row" },
         alignItems: "center",
-        justifyContent: "center",
-        minHeight: "100vh",
-        bgcolor: "white",
+        justifyContent: "space-between",
+        minHeight: "91.3vh",
+        bgcolor: "#1976d2",
         position: "relative",
         overflow: "hidden",
+        padding: 4,
+        margin:"-8px",
       }}
     >
-      {/* Background Shapes */}
+      {/* Left Content */}
       <Box
         sx={{
-          position: "absolute",
-          top: "10%",
-          left: "5%",
-          width: "100px",
-          height: "100px",
-          bgcolor: "#4f46e5",
-          borderRadius: "50%",
-          zIndex: 0,
+          pl: { xs: 0, md: 4 },
+          zIndex: 1,
+          color: "white",
+          textAlign: { xs: "center", md: "left" },
         }}
-      />
-      <Box
-        sx={{
-          position: "absolute",
-          bottom: "10%",
-          right: "5%",
-          width: "150px",
-          height: "150px",
-          bgcolor: "#4f46e5",
-          zIndex: 0,
-        }}
-      />
+      >
+        <Box display="flex" alignItems="center" mb={2} justifyContent={{ xs: "center", md: "flex-start" }}>
+          <IconButton onClick={() => navigate("/")} sx={{ color: "white" }}>
+            <ArrowBackIcon />
+          </IconButton>
+          <Typography variant="body2" sx={{ marginLeft: 1 }}>
+            Back
+          </Typography>
+        </Box>
+        <Typography component="h2" variant="h3" gutterBottom sx={{ fontWeight: "bold" }}>
+          Create Your Account
+        </Typography>
+        <Typography variant="h6">
+          Registration is quick and easy. Fill in the details below.
+        </Typography>
+        <Typography variant="body2" sx={{ mt: 2,mb:5 }}>
+          Already have an account?{" "}
+          <Link
+            component="button"
+            onClick={() => navigate("/")}
+            sx={{ color: "yellow", fontWeight: "bold" }}
+          >
+            Log in
+          </Link>
+        </Typography>
+      </Box>
 
+      {/* Form Container */}
       <Container
         component="main"
         maxWidth="xs"
         sx={{
-          zIndex: 1,
-          bgcolor: "#1c1c1c",
+          transform: { xs: "none", md: "rotate(-10deg)" },
+          right: { xs: "auto", md: "-50px" },
+          bgcolor: "white",
           borderRadius: 4,
           p: 4,
           boxShadow: 4,
+          zIndex: 1,
+          textAlign: "center",
         }}
       >
-        <Box display="flex" alignItems="center">
-          <IconButton onClick={() => navigate("/")} sx={{ color: "white" }}>
-            <ArrowBackIcon />
-          </IconButton>
-          <Typography variant="body2" color="white" sx={{ marginLeft: 1 }}>
-            Back
-          </Typography>
-        </Box>
-        <Typography component="h2" variant="h5" align="center" gutterBottom sx={{ color: "white" }}>
-          Create Your Account
-        </Typography>
-        <Typography variant="body2" align="center" sx={{ color: "white" }} gutterBottom>
-          Already have an account?{" "}
-          <Link component="button" onClick={() => navigate("/")} sx={{ color: "#4f46e5" }}>
-            Log in
-          </Link>
-        </Typography>
         <Box component="form" noValidate onSubmit={handleSignUp}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="name"
-            name="name"
-            placeholder="Name"
-            autoComplete="name"
-            autoFocus
-            sx={{ bgcolor: "white", borderRadius: 2 }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <PersonIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            name="email"
-            placeholder="Email"
-            autoComplete="email"
-            sx={{ bgcolor: "white", borderRadius: 2 }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <EmailIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            id="password"
-            placeholder="Password"
-            type={showPassword ? "text" : "password"}
-            autoComplete="new-password"
-            sx={{ bgcolor: "white", borderRadius: 2 }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <VpnKeyIcon />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={() => setShowPassword((prev) => !prev)} edge="end">
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="confirmPassword"
-            id="confirmPassword"
-            placeholder="Confirm Password"
-            type={showConfirmPassword ? "text" : "password"}
-            autoComplete="new-password"
-            sx={{ bgcolor: "white", borderRadius: 2 }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <VpnKeyIcon />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={() => setShowConfirmPassword((prev) => !prev)} edge="end">
-                    {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
+          <div style={{ marginBottom: "20px" }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                mb: 1,
+                color: "#1976d2",
+              }}
+            >
+              <PersonIcon style={{ marginRight: "8px" }} />
+              Name
+            </Box>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="name"
+              placeholder="Name"
+              name="name"
+              autoComplete="name"
+              autoFocus
+              sx={{ bgcolor: "white", borderRadius: 2 }}
+            />
+          </div>
+          <div style={{ marginBottom: "20px" }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                mb: 1,
+                color: "#1976d2",
+              }}
+            >
+              <EmailIcon style={{ marginRight: "8px" }} />
+              Email
+            </Box>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              placeholder="Email"
+              name="email"
+              autoComplete="email"
+              sx={{ bgcolor: "white", borderRadius: 2 }}
+            />
+          </div>
+          <div style={{ marginBottom: "20px" }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                mb: 1,
+                color: "#1976d2",
+              }}
+            >
+              <VpnKeyIcon style={{ marginRight: "8px" }} />
+              Password
+            </Box>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              placeholder="Password"
+              type={showPassword ? "text" : "password"}
+              id="password"
+              autoComplete="new-password"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowPassword((prev) => !prev)}
+                      edge="end"
+                      aria-label="toggle password visibility"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              sx={{ bgcolor: "white", borderRadius: 2 }}
+            />
+          </div>
+          <div style={{ marginBottom: "20px" }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                mb: 1,
+                color: "#1976d2",
+              }}
+            >
+              <VpnKeyIcon style={{ marginRight: "8px" }} />
+              Confirm Password
+            </Box>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              type={showConfirmPassword ? "text" : "password"}
+              id="confirmPassword"
+              autoComplete="new-password"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowConfirmPassword((prev) => !prev)}
+                      edge="end"
+                      aria-label="toggle confirm password visibility"
+                    >
+                      {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              sx={{ bgcolor: "white", borderRadius: 2 }}
+            />
+          </div>
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2, bgcolor: "#4f46e5", color: "white", borderRadius: 2 }}
+            sx={{
+              mt: 3,
+              mb: 2,
+              bgcolor: "red",
+              color: "white",
+              borderRadius: 2,
+              textTransform: "capitalize",
+            }}
           >
             Sign Up
           </Button>
         </Box>
       </Container>
 
+      {/* Snackbar */}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={4000}
