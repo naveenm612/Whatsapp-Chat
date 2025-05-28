@@ -14,11 +14,7 @@ dotenv.config();
 const app = express();
 
 // Middleware
-// app.use(cors());
-app.use(cors({
-  origin: "https://whatsapp-chat-two.vercel.app",
-  methods: ["GET", "POST"],
-}));
+app.use(cors());
 app.use(bodyParser.json());
 
 // Connect to MongoDB
